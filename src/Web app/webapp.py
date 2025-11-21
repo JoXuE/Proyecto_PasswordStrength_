@@ -38,11 +38,6 @@ if model is None:
 else:
     st.success("Modelo cargado correctamente ✔")
 
-if model is None:
-    st.error("⚠ No se pudo cargar el modelo.")
-else:
-    st.success("Modelo cargado correctamente ✔")
-
 # INPUT DE CONTRASEÑA
 st.markdown("## Ingrese la contraseña que desea evaluar")
 
