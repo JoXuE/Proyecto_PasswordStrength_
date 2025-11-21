@@ -209,18 +209,13 @@ def load_feature_order(model_dir: Path):
 
 def load_model(model_dir: Path):
     try:
-        import joblib
-        pkl = next(model_dir.glob("*.pkl"))
-        mdl = joblib.load(str(pkl))
-        return mdl, "joblib"
-    except Exception:
-        try:
-            import lightgbm as lgb
-            txt = next(model_dir.glob("*.txt"))
-            bst = lgb.Booster(model_file=str(txt))
-            return bst, "lightgbm"
-        except Exception as e:
-            return None, None
+        import lightgbm as lgb
+        txt = next(model_dir.glob("*.txt"))
+        bst = lgb.Booster(model_file=str(txt))
+        return bst, "lightgbm"
+    except Exception as e:
+        print("LightGBM load error:", e)
+        return None, None
 
 def evaluate_password(pw: str, model=None, model_type=None, feature_order=None, guesses_per_second=1e6):
     feat = extract_features_for_model(pw)
