@@ -33,6 +33,10 @@ MODEL_DIR = BASE_DIR / "models" / "lightgbm" / "all"
 feature_order = load_feature_order(MODEL_DIR)
 model, model_type = load_model(MODEL_DIR)
 
+# Verificación de carga del modelo
+st.write("MODEL_DIR:", MODEL_DIR)
+st.write("Contenidos:", list(MODEL_DIR.glob("*")))
+
 if model is None:
     st.error("⚠ No se pudo cargar el modelo.")
 else:
