@@ -42,16 +42,12 @@ st.write("Contenidos:", list(MODEL_DIR.glob("*")))
 feature_order = load_feature_order(MODEL_DIR)
 model, model_type = load_model(MODEL_DIR)
 
-if MODEL_DIR.exists():
-    st.write("Contenidos:", [p.name for p in MODEL_DIR.iterdir()])
-else:
-    st.error("MODEL_DIR no existe en el sistema de archivos")
 
 if model is None:
     st.error("No se pudo cargar el modelo. Verifique la ruta y los archivos.")
 else:
     st.success(f"Modelo '{model_type}' cargado correctamente.")
-    
+
 # INPUT DE CONTRASEÑA
 st.markdown("## Ingrese la contraseña que desea evaluar")
 
