@@ -3,6 +3,50 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from pathlib import Path
+import csv
+from datetime import datetime
+
+
+ROOT = Path(__file__).resolve().parents[2]  # carpeta raíz del repo
+LOGS_DIR = ROOT / "logs"
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
+LOG_FILE = LOGS_DIR / "password_evals.csv"
+
+def log_evaluation(res: dict):
+
+    # Construcción del registro dinámico
+    row = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "password": password,
+        "password_masked": res.get("password_masked"),
+        "model_prob_secure": res.get("model_prob_secure"),
+    }
+
+    # Agrega todas las características dinámicamente
+    features = res.get("features", {})
+    for k, v in features.items():
+        row[f"feat_{k}"] = v
+
+    # Agrega crack times dinámicamente
+    crack = res.get("crack_time", {})
+    for scenario, info in crack.items():
+        row[f"crack_{scenario}_comb"] = info["time_comb"]
+        row[f"crack_{scenario}_shan"] = info["time_shan"]
+
+    # Archivo CSV
+    LOG_FILE = LOGS_DIR / "password_evals.csv"
+    file_exists = LOG_FILE.exists()
+
+    # Crear CSV (o extender columnas si aparecen nuevas)
+    with LOG_FILE.open("a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=row.keys())
+
+        # Escribir encabezado si el archivo recién se crea
+        if not file_exists:
+            writer.writeheader()
+
+        writer.writerow(row)
 
 
 from pw_check_interpretable_interactive import (
@@ -61,6 +105,7 @@ if st.button("Evaluar contraseña"):
     if not password:
         st.warning(" Ingrese una contraseña primero.")
         st.stop()
+        
 
     # EVALUACIÓN
     res = evaluate_password(
@@ -80,6 +125,13 @@ if st.button("Evaluar contraseña"):
         st.progress(min(max(prob, 0), 1))
     else:
         st.error("No se pudo calcular probabilidad.")
+
+    try:
+        log_evaluation(res)
+    except Exception as e:
+        st.error(f"")
+    
+    
 
     # INFORMACIÓN GENERAL
     st.markdown("## Información General")
@@ -145,4 +197,5 @@ if st.button("Evaluar contraseña"):
     st.markdown("## 🛠 Recomendaciones")
     for r in res["recommendations"]:
         st.markdown(f"- {r}")
+
 
