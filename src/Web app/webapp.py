@@ -36,9 +36,6 @@ PROJECT_ROOT = BASE_DIR.parent.parent
 # models directory at project root
 MODEL_DIR = PROJECT_ROOT / "models" / "lightgbm" / "all"
 
-st.write("MODEL_DIR:", MODEL_DIR)
-st.write("Contenidos:", list(MODEL_DIR.glob("*")))
-
 feature_order = load_feature_order(MODEL_DIR)
 model, model_type = load_model(MODEL_DIR)
 
