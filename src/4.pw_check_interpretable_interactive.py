@@ -294,10 +294,14 @@ def pretty_print(res, pw, show_pw=False):
     print("\n--- End ---\n")
 
 def main():
+    # Detecta automáticamente la ruta absoluta del proyecto
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    DEFAULT_MODEL_DIR = BASE_DIR / "models" / "lightgbm" / "all"
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model-dir",
-        default=r"D:\Universidad\ULTIMO_SEMESTRE\Tesis\Proyecto_PasswordStrength_\models\lightgbm\all",
+        default=str(DEFAULT_MODEL_DIR),
         help="Directorio del modelo exportado y featurenames.json"
     )
     parser.add_argument("--guessec", type=float, default=1e6, help="Guesses por segundo para escenario 'custom'")
@@ -308,6 +312,7 @@ def main():
     model_dir = Path(args.model_dir)
     feature_order = load_feature_order(model_dir)
     model, model_type = load_model(model_dir)
+
 
     if feature_order is None:
         print("[WARN] No se encontraron nombres de feature; usando extractor por defecto.")
