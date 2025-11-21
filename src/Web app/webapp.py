@@ -26,12 +26,17 @@ st.markdown("### **Modelo ML — Proyecto Integrador**")
 st.write("Analiza tu contraseña con un modelo LightGBM entrenado y heurísticas avanzadas.")
 
 # CARGA DEL MODELO Y FEATURE ORDER
-MODEL_DIR = Path(
-    r"D:\Universidad\ULTIMO_SEMESTRE\Tesis\Proyecto_PasswordStrength_\models\lightgbm\all"
-)
+# Detectar ruta absoluta del proyecto independientemente del SO o entorno
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_DIR = BASE_DIR / "models" / "lightgbm" / "all"
 
 feature_order = load_feature_order(MODEL_DIR)
 model, model_type = load_model(MODEL_DIR)
+
+if model is None:
+    st.error("⚠ No se pudo cargar el modelo.")
+else:
+    st.success("Modelo cargado correctamente ✔")
 
 if model is None:
     st.error("⚠ No se pudo cargar el modelo.")
