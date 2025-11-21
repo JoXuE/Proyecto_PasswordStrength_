@@ -27,21 +27,21 @@ st.write("Analiza tu contraseña con un modelo LightGBM entrenado y heurísticas
 
 # CARGA DEL MODELO Y FEATURE ORDER
 # Detectar ruta absoluta del proyecto independientemente del SO o entorno
-BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_DIR = BASE_DIR / "models" / "lightgbm" / "all"
+# src/ directory
+BASE_DIR = Path(__file__).resolve().parent
 
-feature_order = load_feature_order(MODEL_DIR)
-model, model_type = load_model(MODEL_DIR)
+# project root (one level above)
+PROJECT_ROOT = BASE_DIR.parent.parent
 
-# Verificación de carga del modelo
+# models directory at project root
+MODEL_DIR = PROJECT_ROOT / "models" / "lightgbm" / "all"
+
 st.write("MODEL_DIR:", MODEL_DIR)
 st.write("Contenidos:", list(MODEL_DIR.glob("*")))
-
-if model is None:
-    st.error("⚠ No se pudo cargar el modelo.")
+if MODEL_DIR.exists():
+    st.write("Contenidos:", [p.name for p in MODEL_DIR.iterdir()])
 else:
-    st.success("Modelo cargado correctamente ✔")
-
+    st.error("MODEL_DIR no existe en el sistema de archivos")
 # INPUT DE CONTRASEÑA
 st.markdown("## Ingrese la contraseña que desea evaluar")
 
