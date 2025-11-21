@@ -217,6 +217,7 @@ def load_model(model_dir: Path):
         print("LightGBM load error:", e)
         return None, None
 
+
 def evaluate_password(pw: str, model=None, model_type=None, feature_order=None, guesses_per_second=1e6):
     feat = extract_features_for_model(pw)
     if feature_order:
